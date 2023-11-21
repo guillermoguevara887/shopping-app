@@ -26,14 +26,21 @@ inputBtn.addEventListener("click", function () {
 })
 
 onValue(itemToDb, function (snapshot) {
-    let objectInArray = Object.entries(snapshot.val());
-    clearAppedItem();
 
-    for (let i = 0; i < objectInArray.length; i++) {
-        let newValue = objectInArray[i];
+    if (snapshot.exists()) {
+        let objectInArray = Object.entries(snapshot.val());
+        clearAppedItem();
 
-        appendItem(newValue);
+        for (let i = 0; i < objectInArray.length; i++) {
+            let newValue = objectInArray[i];
+
+            appendItem(newValue);
+        }
+
+    } else {
+        ulItem.innerHTML = "No items here... yet"
     }
+
 
 })
 
