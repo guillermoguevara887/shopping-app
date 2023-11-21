@@ -1,6 +1,6 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://playground-80e97-default-rtdb.firebaseio.com/"
@@ -26,11 +26,12 @@ inputBtn.addEventListener("click", function () {
 })
 
 onValue(itemToDb, function (snapshot) {
-    let objectInArray = Object.values(snapshot.val());
+    let objectInArray = Object.entries(snapshot.val());
     clearAppedItem();
 
     for (let i = 0; i < objectInArray.length; i++) {
         let newValue = objectInArray[i];
+
         appendItem(newValue);
     }
 
@@ -46,5 +47,14 @@ function clearAppedItem() {
 }
 
 function appendItem(value) {
-    ulItem.innerHTML += `<li>${value}</li>`;
+    let itemIdInDb = value[0];
+    let itemToDb = value[1];
+    let newIl = document.createElement("li");
+    newIl.textContent = itemToDb;
+
+    newIl.addEventListener("click", function () {
+        let exactLocationId = ref(database, `Item/${itemIdInDb}`);
+        remove(exactLocationId);
+    })
+    ulItem.append(newIl);
 }
